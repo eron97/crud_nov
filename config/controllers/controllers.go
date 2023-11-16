@@ -1,7 +1,13 @@
 package controllers
 
-import "fmt"
+import (
+	"net/http"
 
-func GetAllTasks() {
-	fmt.Println("Rota chamada com sucesso!")
+	"github.com/gin-gonic/gin"
+)
+
+var tasks = [3]int{1, 2, 3}
+
+func GetAllTasks(c *gin.Context) {
+	c.JSON(http.StatusOK, tasks)
 }
