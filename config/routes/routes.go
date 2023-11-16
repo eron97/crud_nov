@@ -8,4 +8,5 @@ import (
 func SetupTaskRoutes(router *gin.Engine) {
 	// router.GET("/tasks", controllers.GetAllTasks)
 	router.GET("/tasks", controllers.GetAllTasks)
+	router.GET("/tasks/:task_name", controllers.GetTaskByName)
 }
