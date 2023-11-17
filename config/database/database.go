@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	"github.com/eron97/crud_nov.git/config/models"
@@ -15,7 +14,6 @@ func InitDB() *sql.DB {
 	var err error
 	dataSourceName := "admin:mysql-todolist@tcp(database-1.cpj0eavfzshu.us-east-1.rds.amazonaws.com:3306)/db_todolist"
 
-	// Conectar ao banco de dados MySQL
 	db, err := sql.Open("mysql", dataSourceName)
 	if err != nil {
 		log.Fatal(err)
@@ -26,7 +24,7 @@ func InitDB() *sql.DB {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Conexão bem-sucedida ao banco de dados MySQL na AWS RDS!")
+	log.Println("[InitDB: Conexão bem-sucedida ao AWS RDS]")
 
 	return db
 }
@@ -35,7 +33,7 @@ func InitDB() *sql.DB {
 func GetDB(c *gin.Context) *sql.DB {
 	db, exists := c.Get("db")
 	if !exists {
-		log.Fatal("O ponteiro do banco de dados não está no contexto Gin")
+		log.Fatal("[GetDB: Ponteiro não está no contexto Gin]")
 	}
 	return db.(*sql.DB)
 }
@@ -63,7 +61,7 @@ func QueryAllTasks(db *sql.DB) ([]models.Task, error) {
 }
 
 // GetTaskByName retorna uma tarefa específica pelo nome
-func GetTaskByName(db *sql.DB, taskName string) (*models.Task, error) {
+func QueryByName(db *sql.DB, taskName string) (*models.Task, error) {
 	row := db.QueryRow("SELECT * FROM tasks WHERE Task_Name = ?", taskName)
 
 	var task models.Task
@@ -74,4 +72,14 @@ func GetTaskByName(db *sql.DB, taskName string) (*models.Task, error) {
 	}
 
 	return &task, nil
+}
+
+// AddTask adiciona uma nova tarefa ao banco de dados
+func QueryAddTask(db *sql.DB, task *models.TaskPost) error {
+	_, err := db.Exec("INSERT INTO tasks (Task_Name, Priority) VALUES (?, ?)", task.Task_Name, task.Priority)
+	if err != nil {
+		log.Printf("Erro na tarefa do package database: %s ", err.Error())
+		return err
+	}
+	return nil
 }

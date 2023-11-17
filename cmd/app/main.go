@@ -12,7 +12,7 @@ func main() {
 	// Inicializa o banco de dados
 	db := database.InitDB()
 	defer db.Close()
-	log.Println("Database ok!")
+	log.Println("[Conexão com database ok]")
 
 	r := gin.Default()
 
@@ -23,7 +23,7 @@ func main() {
 	})
 
 	routes.SetupTaskRoutes(r)
-	log.Println("Routes OK!")
+	log.Println("[Rotas ok]")
 
 	r.Run()
 
